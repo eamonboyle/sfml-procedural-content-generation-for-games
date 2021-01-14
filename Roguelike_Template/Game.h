@@ -90,6 +90,11 @@ private:
 	void SpawnEnemy(ENEMY enemyType, sf::Vector2f position = { -1.f, -1.f });
 
 	/**
+	 * Spawns a given number of a certain tile at random locations in the level.
+	 */
+	void SpawnRandomTiles(TILE tileType, int count);
+
+	/**
 	 * Calculates the distance between two points
 	 * @param position1 The position of the first point.
 	 * @param position2 The position of the second item.

@@ -58,6 +58,12 @@ void Game::Initialize()
 
 	// Populate level.
 	PopulateLevel();
+
+	// Add the new tile type to level.
+	m_level.AddTile("../resources/tiles/spr_tile_floor_alt.png", TILE::FLOOR_ALT);
+
+	// Change a selection of random tiles to the cracked tile sprite.
+	SpawnRandomTiles(TILE::FLOOR_ALT, std::rand() % 40);
 }
 
 // Constructs the grid of sprites that are used to draw the game light system.
@@ -293,6 +299,31 @@ void Game::SpawnEnemy(ENEMY enemyType, sf::Vector2f position)
 	m_enemies.push_back(std::move(enemy));
 }
 
+// Spawns a given number of a certain tile at random locations in the level.
+void Game::SpawnRandomTiles(TILE tileType, int count)
+{
+	// Declare the variables we need.
+	int rowIndex(0), columnIndex(0), tileIndex(0);
+
+	// Loop the number of tiles we need.
+	for (int i = 0; i < count; i++)
+	{
+		// Declare the variables we need.
+		int columnIndex(0), rowIndex(0);
+
+		// Loop until we select a floor tile.
+		while (!m_level.IsFloor(columnIndex, rowIndex))
+		{
+			// Generate a random index for the row and column
+			columnIndex = std::rand() % GRID_WIDTH;
+			rowIndex = std::rand() % GRID_HEIGHT;
+		}
+
+		// Now we change the selected tile.
+		m_level.SetTile(columnIndex, rowIndex, tileType);
+	}
+}
+
 // Populate the level with items and enemies.
 void Game::PopulateLevel()
 {
@@ -301,7 +332,7 @@ void Game::PopulateLevel()
 	{
 		if (std::rand() % 2)
 		{
-			SpawnItem(static_cast<ITEM>(std::rand() % 2));
+			SpawnItem(static_cast<ITEM>(std::rand() % 4));
 		}
 	}
 
@@ -594,21 +625,8 @@ void Game::UpdateEnemies(sf::Vector2f playerPosition, float timeDelta)
 					{
 						position.x += std::rand() % 31 - 15;
 						position.y += std::rand() % 31 - 15;
-						std::unique_ptr<Item> item;
 
-						switch (std::rand() % 2)
-						{
-						case 0: // Spawn gold.
-							item = std::make_unique<Gold>();
-							break;
-
-						case 1: // Spawn gem.
-							item = std::make_unique<Gem>();
-							break;
-						}
-
-						item->SetPosition(position);
-						m_items.push_back(std::move(item));
+						SpawnItem(static_cast<ITEM>(std::rand() % 4), position);
 					}
 
 					if ((std::rand() % 5) == 0)			// 1 in 5 change of spawning health.
