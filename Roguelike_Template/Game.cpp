@@ -217,35 +217,38 @@ void Game::PopulateLevel()
 	// A Boolean variable used to determine if an object should be spawned
 	bool canSpawn;
 
-	// Spawn gold.
-	canSpawn = std::rand() % 2;
+	// Generate a random number between 1 and 10.
+	int iterations = std::rand() % 10 + 1;
 
-	if (canSpawn)
+	// Now loop that number of times.
+	for (int i = 0; i < iterations; i++)
 	{
-		// Create a gold object.
-		std::unique_ptr<Gold> gold = std::make_unique<Gold>();
+		// Spawn an item.
+		canSpawn = std::rand() % 2;
 
-		// Set the gold position.
-		gold->SetPosition(sf::Vector2f(m_screenCenter.x - 50.f, m_screenCenter.y));
+		if (canSpawn)
+		{
+			int itemIndex = std::rand() % 2;
+			std::unique_ptr<Item> item;
 
-		// Add the gold item to our collection of all objects.
-		m_items.push_back(std::move(gold));
-	}
+			switch (itemIndex)
+			{
+			case 0:
+				item = std::make_unique<Gold>();
+				break;
 
-	// Spawn a gem.
-	canSpawn = std::rand() % 2;
+			case 1:
+				item = std::make_unique<Gem>();
+				break;
+			}
 
-	if (canSpawn)
-	{
-		// Create a gem object.
-		std::unique_ptr<Gem> gem = std::make_unique<Gem>();
+			// Set the gem position.
+			item->SetPosition(sf::Vector2f(m_screenCenter.x, m_screenCenter.y));
 
-		// Set the gem position.
-		gem->SetPosition(sf::Vector2f(m_screenCenter.x + 50.f, m_screenCenter.y));
-
-		// Add the gem to our collection of all objects.
-		m_items.push_back(std::move(gem));
-}
+			// Add the gem to our collection of all objects.
+			m_items.push_back(std::move(item));
+		}
+	}	
 }
 
 // Returns the running state of the game.
