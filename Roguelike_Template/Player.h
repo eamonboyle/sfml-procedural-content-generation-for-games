@@ -98,6 +98,11 @@ private:
 	sf::Sprite m_aimSprite;
 
 	/**
+	 * The amount of stat points the player has
+	 */
+	int m_statPoints;
+
+	/**
 	 * The time since the player's last attack.
 	 */
 	float m_attackDelta;

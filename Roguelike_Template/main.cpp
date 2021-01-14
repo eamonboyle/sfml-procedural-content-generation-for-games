@@ -5,7 +5,7 @@
 int main()
 {
 	// Set a random seed.
-	srand(42);
+	std::srand(static_cast<unsigned int>(time(nullptr)));
 
 	// Create the main game object.
 	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Roguelike Template", sf::Style::Fullscreen);

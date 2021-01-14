@@ -214,14 +214,38 @@ void Game::LoadUI()
 // Populate the level with items.
 void Game::PopulateLevel()
 {
-	// Create a gold object.
-	std::unique_ptr<Gold> gold = std::make_unique<Gold>();
+	// A Boolean variable used to determine if an object should be spawned
+	bool canSpawn;
 
-	// Set the gold position.
-	gold->SetPosition(sf::Vector2f(m_screenCenter.x - 50.f, m_screenCenter.y));
+	// Spawn gold.
+	canSpawn = std::rand() % 2;
 
-	// Add the gold item to our collection of all objects.
-	m_items.push_back(std::move(gold));
+	if (canSpawn)
+	{
+		// Create a gold object.
+		std::unique_ptr<Gold> gold = std::make_unique<Gold>();
+
+		// Set the gold position.
+		gold->SetPosition(sf::Vector2f(m_screenCenter.x - 50.f, m_screenCenter.y));
+
+		// Add the gold item to our collection of all objects.
+		m_items.push_back(std::move(gold));
+	}
+
+	// Spawn a gem.
+	canSpawn = std::rand() % 2;
+
+	if (canSpawn)
+	{
+		// Create a gem object.
+		std::unique_ptr<Gem> gem = std::make_unique<Gem>();
+
+		// Set the gem position.
+		gem->SetPosition(sf::Vector2f(m_screenCenter.x + 50.f, m_screenCenter.y));
+
+		// Add the gem to our collection of all objects.
+		m_items.push_back(std::move(gem));
+}
 }
 
 // Returns the running state of the game.
