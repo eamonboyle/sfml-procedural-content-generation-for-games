@@ -211,6 +211,7 @@ void Game::LoadUI()
 	m_uiSprites.push_back(m_staminaStatSprite);
 }
 
+// Spawns an item at the given location or a random position.
 void Game::SpawnItem(ITEM itemType, sf::Vector2f position)
 {
 	std::unique_ptr<Item> item;
@@ -247,8 +248,6 @@ void Game::SpawnItem(ITEM itemType, sf::Vector2f position)
 	case ITEM::KEY:
 		item = std::make_unique<Key>();
 		break;
-	default:
-		break;
 	}
 
 	// Set the item position.
@@ -258,7 +257,43 @@ void Game::SpawnItem(ITEM itemType, sf::Vector2f position)
 	m_items.push_back(std::move(item));
 }
 
-// Populate the level with items.
+// Spawns a given number of enemies in the level.
+void Game::SpawnEnemy(ENEMY enemyType, sf::Vector2f position)
+{
+	// Spawn location of enemy.
+	sf::Vector2f spawnLocation;
+
+	// Choose a random, unused spawn location.
+	if ((position.x >= 0.f) || (position.y >= 0.f))
+	{
+		spawnLocation = position;
+	}
+	else
+	{
+		spawnLocation = m_level.GetRandomSpawnLocation();
+	}
+
+	// Creat the enemy.
+	std::unique_ptr<Enemy> enemy;
+
+	switch (enemyType)
+	{
+	case ENEMY::SLIME:
+		enemy = std::make_unique<Slime>();
+		break;
+	case ENEMY::HUMANOID:
+		enemy = std::make_unique<Humanoid>();
+		break;
+	}
+
+	// Set spawn location.
+	enemy->SetPosition(spawnLocation);
+
+	// Add to list of all enemies.
+	m_enemies.push_back(std::move(enemy));
+}
+
+// Populate the level with items and enemies.
 void Game::PopulateLevel()
 {
 	// Spawn items.
@@ -267,6 +302,15 @@ void Game::PopulateLevel()
 		if (std::rand() % 2)
 		{
 			SpawnItem(static_cast<ITEM>(std::rand() % 2));
+		}
+	}
+
+	// Spawn enemies.
+	for (int i = 0; i < MAX_ENEMY_SPAWN_COUNT; i++)
+	{
+		if (std::rand() % 2)
+		{
+			SpawnEnemy(static_cast<ENEMY>(std::rand() % static_cast<int>(ENEMY::COUNT)));
 		}
 	}
 }

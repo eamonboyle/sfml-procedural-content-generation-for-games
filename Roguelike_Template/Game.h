@@ -26,6 +26,7 @@ static float const FPS = 60.0;						// Constant for fixed time - step loop. We'l
 static float const MS_PER_STEP = 1.0f / FPS;		// Roughly (0.017) @ 60fps.
 
 static int const MAX_ITEM_SPAWN_COUNT = 50;
+static int const MAX_ENEMY_SPAWN_COUNT = 20;
 
 class Game
 {
@@ -82,6 +83,11 @@ private:
 	 * Spawns a given item in the level.
 	 */
 	void SpawnItem(ITEM itemType, sf::Vector2f position = { -1.f, -1.f });
+
+	/**
+	 * Spawns a given enemy in the level.
+	 */
+	void SpawnEnemy(ENEMY enemyType, sf::Vector2f position = { -1.f, -1.f });
 
 	/**
 	 * Calculates the distance between two points
