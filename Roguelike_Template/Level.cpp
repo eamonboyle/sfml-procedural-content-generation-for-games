@@ -296,6 +296,39 @@ int Level::GetTileSize() const
 	return TILE_SIZE;
 }
 
+sf::Vector2f Level::GetActualTileLocation(int columnIndex, int rowIndex)
+{
+	sf::Vector2f location;
+
+	location.x = m_origin.x + (columnIndex * TILE_SIZE) + (TILE_SIZE / 2);
+	location.y = m_origin.y + (rowIndex * TILE_SIZE) + (TILE_SIZE / 2);
+
+	return location;
+}
+
+sf::Vector2f Level::GetRandomSpawnLocation()
+{
+	// Declare the variables we need.
+	int rowIndex(0), columnIndex(0);
+
+	// Loop until we select a floor tile.
+	while (!IsFloor(columnIndex, rowIndex))
+	{
+		// Generate a random index for the row and column
+		columnIndex = std::rand() % GRID_WIDTH;
+		rowIndex = std::rand() % GRID_HEIGHT;
+	}
+
+	// Convert the tile position to absolute position.
+	sf::Vector2f tileLocation(GetActualTileLocation(columnIndex, rowIndex));
+
+	// Create a random offset.
+	tileLocation.x += std::rand() % 21 - 10;
+	tileLocation.y += std::rand() % 21 - 10;
+
+	return tileLocation;
+}
+
 // Gets a vector of all torches in the level.
 std::vector<std::shared_ptr<Torch>>* Level::GetTorches()
 {

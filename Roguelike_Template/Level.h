@@ -108,6 +108,16 @@ public:
 	sf::Vector2f GetPosition() const;
 
 	/**
+	 * Returns the position of a tile on the screen.
+	 */
+	sf::Vector2f GetActualTileLocation(int columnIndex, int rowIndex);
+
+	/**
+	 * Returns a valid spawn location from the currently loaded level.
+	 */
+	sf::Vector2f GetRandomSpawnLocation();
+
+	/**
 	 * Gets a vector of all torches in the level.
 	 * @return A vector of shared_ptrs containing all torches in the level.
 	 */

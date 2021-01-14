@@ -211,44 +211,64 @@ void Game::LoadUI()
 	m_uiSprites.push_back(m_staminaStatSprite);
 }
 
+void Game::SpawnItem(ITEM itemType, sf::Vector2f position)
+{
+	std::unique_ptr<Item> item;
+
+	int objectIndex = 0;
+
+	// Choose a random, unused spawn location if not overridden.
+	sf::Vector2f spawnLocation;
+
+	if ((position.x >= 0.f) || (position.y >= 0.f))
+	{
+		spawnLocation = position;
+	}
+	else
+	{
+		spawnLocation = m_level.GetRandomSpawnLocation();
+	}
+
+	// Check which type of object is being spawned.
+	switch (itemType)
+	{
+	case ITEM::GEM:
+		item = std::make_unique<Gem>();
+		break;
+	case ITEM::GOLD:
+		item = std::make_unique<Gold>();
+		break;
+	case ITEM::HEART:
+		item = std::make_unique<Heart>();
+		break;
+	case ITEM::POTION:
+		item = std::make_unique<Potion>();
+		break;
+	case ITEM::KEY:
+		item = std::make_unique<Key>();
+		break;
+	default:
+		break;
+	}
+
+	// Set the item position.
+	item->SetPosition(spawnLocation);
+
+	// Add the item to the list of all items
+	m_items.push_back(std::move(item));
+}
+
 // Populate the level with items.
 void Game::PopulateLevel()
 {
-	// A Boolean variable used to determine if an object should be spawned
-	bool canSpawn;
-
-	// Generate a random number between 1 and 10.
-	int iterations = std::rand() % 10 + 1;
-
-	// Now loop that number of times.
-	for (int i = 0; i < iterations; i++)
+	// Spawn items.
+	for (int i = 0; i < MAX_ITEM_SPAWN_COUNT; i++)
 	{
-		// Spawn an item.
-		canSpawn = std::rand() % 2;
-
-		if (canSpawn)
+		if (std::rand() % 2)
 		{
-			int itemIndex = std::rand() % 2;
-			std::unique_ptr<Item> item;
-
-			switch (itemIndex)
-			{
-			case 0:
-				item = std::make_unique<Gold>();
-				break;
-
-			case 1:
-				item = std::make_unique<Gem>();
-				break;
-			}
-
-			// Set the gem position.
-			item->SetPosition(sf::Vector2f(m_screenCenter.x, m_screenCenter.y));
-
-			// Add the gem to our collection of all objects.
-			m_items.push_back(std::move(item));
+			SpawnItem(static_cast<ITEM>(std::rand() % 2));
 		}
-	}	
+	}
 }
 
 // Returns the running state of the game.
